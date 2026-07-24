@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Viet Utility - Bộ công cụ miễn phí cho người Việt</title>
+    <meta
+      name="description"
+      content="Website công cụ miễn phí cho người Việt: lịch âm, tiện ích ngày tháng, tính toán tài chính và xử lý văn bản."
+    />
+    <meta property="og:title" content="Viet Utility" />
+    <meta
+      property="og:description"
+      content="Bộ công cụ web tĩnh, nhanh, thân thiện mobile, dễ sử dụng hàng ngày."
+    />
+    <meta property="og:type" content="website" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800&family=JetBrains+Mono:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/css/base.css" />
+    <link rel="stylesheet" href="assets/css/components.css" />
+    <link rel="stylesheet" href="assets/css/pages.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Bo qua menu, toi noi dung</a>
+
+    <header class="site-header">
+      <div class="container site-header__inner">
+        <a class="brand" href="index.html">Viet <span>Utility</span></a>
+        <nav class="site-nav">
+          <ul class="site-nav__list">
+            <li><a href="index.html" aria-current="page">Trang chủ</a></li>
+            <li><a href="pages/lunar-calendar.html">Lịch âm</a></li>
+            <li><a href="pages/date-tools.html">Ngày tháng</a></li>
+            <li><a href="pages/finance-tools.html">Tài chính</a></li>
+            <li><a href="pages/text-tools.html">Văn bản</a></li>
+            <li><a href="pages/more-tools.html">Tiện ích khác</a></li>
+          </ul>
+        </nav>
+        
+        <label for="nav-mobile-toggle" class="nav-hamburger" aria-label="Toggle navigation menu">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" aria-hidden="true">
+            <path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z" />
+          </svg>
+        </label>
+        <input type="checkbox" id="nav-mobile-toggle" class="nav-mobile-input" aria-hidden="true" />
+        <label for="nav-mobile-toggle" class="nav-mobile-overlay" aria-hidden="true"></label>
+        
+        <div class="nav-mobile-drawer">
+          <div class="nav-mobile-header">
+            <label for="nav-mobile-toggle" class="nav-mobile-close" aria-label="Close navigation">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" aria-hidden="true">
+                <path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" />
+              </svg>
+            </label>
+          </div>
+          <ul class="nav-mobile-list">
+            <li><a href="index.html">Trang chủ</a></li>
+            <li><a href="pages/lunar-calendar.html">Lịch âm</a></li>
+            <li><a href="pages/date-tools.html">Ngày tháng</a></li>
+            <li><a href="pages/finance-tools.html">Tài chính</a></li>
+            <li><a href="pages/text-tools.html">Văn bản</a></li>
+            <li><a href="pages/more-tools.html">Tiện ích khác</a></li>
+          </ul>
+        </div>
+      </div>
+    </header>
+
+    <main id="main">
+      <div class="container">
+        <section class="hero">
+          <div>
+            <!-- <span class="badge">Static • Nhanh • Mien phi</span> -->
+            <h1 class="hero__title">Bộ công cụ hữu ích cho <strong>người dùng Việt Nam</strong></h1>
+            <!-- <p class="hero__subtitle">
+              Duoc toi uu theo cac nguyen tac UX pho bien: thong tin ro rang, thao tac ngan,
+              phan hoi ngay lap tuc, va giao dien de doc tren dien thoai.
+            </p> -->
+            <div class="actions">
+              <a class="btn-primary" style="text-decoration:none;padding:0.7rem 1rem;display:inline-flex;border-radius:999px;color:#fff" href="pages/lunar-calendar.html">Mở lịch âm ngay</a>
+              <a class="btn-ghost" style="text-decoration:none;padding:0.7rem 1rem;display:inline-flex;border-radius:999px" href="pages/date-tools.html">Xem tiện ích ngày tháng</a>
+            </div>
+          </div>
+          <!-- <aside class="panel" aria-label="Tim cong cu nhanh">
+            <label for="toolSearch">Tìm nhanh công cụ</label>
+            <input
+              id="toolSearch"
+              data-tool-search
+              type="search"
+              placeholder="Ví dụ: lịch âm, vay, bỏ dấu..."
+              autocomplete="off"
+            />
+            <p class="small">Gõ từ khóa để lọc danh sách bên dưới.</p>
+            <p class="notice">Lưu ý: Kết quả lịch âm và can-chi mang tính tham khảo cho nhu cầu dân dùng.</p>
+          </aside> -->
+        </section>
+
+        <section class="grid tools" aria-label="Danh sach cong cu">
+          <article class="card" data-tool-card>
+            <h3>Lịch âm</h3>
+            <p>Đổi ngày dương sang âm lịch.</p>
+            <a href="pages/lunar-calendar.html">Sử dụng ngay</a>
+          </article>
+
+          <article class="card" data-tool-card>
+            <h3>Tiện ích ngày tháng</h3>
+            <p>Tính tuổi, số ngày làm việc, đếm ngược đến Tết, tính ngày dự sinh.</p>
+            <a href="pages/date-tools.html">Mở tiện ích</a>
+          </article>
+
+          <article class="card" data-tool-card>
+            <h3>Tính toán tài chính</h3>
+            <p>Tính khoản vay, tính lãi tiết kiệm, thuế TNCN, đổi lương Gross ↔ Net</p>
+            <a href="pages/finance-tools.html">Tính ngay</a>
+          </article>
+
+          <article class="card" data-tool-card>
+            <h3>Bỏ dấu tiếng Việt</h3>
+            <p>Chuẩn hóa văn bản, bỏ dấu, đổi kiểu chữ và đếm số từ-ký tự.</p>
+            <a href="pages/text-tools.html">Mở công cụ</a>
+          </article>
+
+          <article class="card" data-tool-card>
+            <h3>Tiện ích khác</h3>
+            <p>Đổi đơn vị, size giày/quần áo, BMI, mật khẩu, random và tạo mã QR.</p>
+            <a href="pages/more-tools.html">Khám phá ngay</a>
+          </article>
+
+          <!-- <article class="card" data-tool-card>
+            <h3>Tot cho di dong</h3>
+            <p>Responsive, tap target lon, doc de tren man hinh nho.</p>
+            <a href="pages/date-tools.html">Kiem tra trai nghiem</a>
+          </article>
+
+          <article class="card" data-tool-card>
+            <h3>Deploy free</h3>
+            <p>Hoat dong tot tren GitHub Pages, khong can backend.</p>
+            <a href="README.md">Xem release step</a>
+          </article> -->
+        </section>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container site-footer__inner">
+        <p class="small">© <span data-year></span> Viet Utility. Xây dựng cho nhu cầu hàng ngày của người Việt.</p>
+        <!-- <p class="small">Tương thích GitHub Pages • HTML/CSS/JS</p> -->
+      </div>
+    </footer>
+
+    <script src="assets/js/site.js"></script>
+  </body>
+</html>

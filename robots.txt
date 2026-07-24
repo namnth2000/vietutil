@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://namnth2000.github.io/vietutil/sitemap.xml

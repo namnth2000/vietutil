@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tiện ích khác - Đổi đơn vị, BMI, mật khẩu, mã QR</title>
+    <meta
+      name="description"
+      content="Đổi đơn vị đo lường, đổi size giày/quần áo, tính BMI, tạo/kiểm tra mật khẩu, quay số ngẫu nhiên và tạo mã QR từ văn bản/liên kết."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800&family=JetBrains+Mono:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/css/base.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
+    <link rel="stylesheet" href="../assets/css/pages.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Bo qua menu, toi noi dung</a>
+
+    <header class="site-header">
+      <div class="container site-header__inner">
+        <a class="brand" href="../index.html">Viet <span>Utility</span></a>
+        <nav class="site-nav">
+          <ul class="site-nav__list">
+            <li><a href="../index.html">Trang chủ</a></li>
+            <li><a href="lunar-calendar.html">Lịch âm</a></li>
+            <li><a href="date-tools.html">Ngày tháng</a></li>
+            <li><a href="finance-tools.html">Tài chính</a></li>
+            <li><a href="text-tools.html">Văn bản</a></li>
+            <li><a href="more-tools.html" aria-current="page">Tiện ích khác</a></li>
+          </ul>
+        </nav>
+
+        <label for="nav-mobile-toggle" class="nav-hamburger" aria-label="Toggle navigation menu">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" aria-hidden="true">
+            <path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z" />
+          </svg>
+        </label>
+        <input type="checkbox" id="nav-mobile-toggle" class="nav-mobile-input" aria-hidden="true" />
+        <label for="nav-mobile-toggle" class="nav-mobile-overlay" aria-hidden="true"></label>
+
+        <div class="nav-mobile-drawer">
+          <div class="nav-mobile-header">
+            <label for="nav-mobile-toggle" class="nav-mobile-close" aria-label="Close navigation">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" aria-hidden="true">
+                <path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" />
+              </svg>
+            </label>
+          </div>
+          <ul class="nav-mobile-list">
+            <li><a href="../index.html">Trang chủ</a></li>
+            <li><a href="lunar-calendar.html">Lịch âm</a></li>
+            <li><a href="date-tools.html">Ngày tháng</a></li>
+            <li><a href="finance-tools.html">Tài chính</a></li>
+            <li><a href="text-tools.html">Văn bản</a></li>
+            <li><a href="more-tools.html">Tiện ích khác</a></li>
+          </ul>
+        </div>
+      </div>
+    </header>
+
+    <main id="main">
+      <div class="container columns">
+        <section class="panel">
+          <header class="page-header">
+            <h1>Tiện ích khác</h1>
+            <p>Đổi đơn vị đo lường, đổi size giày/quần áo, tính BMI, tạo/kiểm tra mật khẩu, quay số ngẫu nhiên và tạo mã QR.</p>
+          </header>
+
+          <form data-more-form>
+            <label for="moreMode">Chọn tính năng</label>
+            <select id="moreMode" data-more-mode>
+              <option value="unit">Đổi đơn vị đo lường</option>
+              <option value="size">Đổi size giày/quần áo VN ↔ quốc tế</option>
+              <option value="bmi">Tính chỉ số BMI</option>
+              <option value="password">Tạo/kiểm tra mật khẩu</option>
+              <option value="random">Random / quay số ngẫu nhiên</option>
+              <option value="qr">Tạo mã QR từ văn bản/liên kết</option>
+            </select>
+
+            <!-- Đổi đơn vị đo lường -->
+            <div class="mode-panel" data-mode-panel="unit">
+              <div class="form-row">
+                <div>
+                  <label for="unitCategory">Loại đơn vị</label>
+                  <select id="unitCategory">
+                    <option value="length">Chiều dài</option>
+                    <option value="mass">Khối lượng</option>
+                    <option value="temperature">Nhiệt độ</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="unitValue">Giá trị</label>
+                  <input id="unitValue" type="number" step="any" value="1" />
+                </div>
+              </div>
+              <div class="form-row">
+                <div>
+                  <label for="unitFrom">Từ đơn vị</label>
+                  <select id="unitFrom"></select>
+                </div>
+                <div>
+                  <label for="unitTo">Sang đơn vị</label>
+                  <select id="unitTo"></select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Đổi size giày/quần áo -->
+            <div class="mode-panel" data-mode-panel="size" hidden>
+              <div class="form-row">
+                <div>
+                  <label for="sizeType">Loại</label>
+                  <select id="sizeType">
+                    <option value="shoe-men">Giày nam (VN/EU)</option>
+                    <option value="shoe-women">Giày nữ (VN/EU)</option>
+                    <option value="clothing">Quần áo (S/M/L ↔ VN)</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="sizeValue">Size hiện có</label>
+                  <select id="sizeValue"></select>
+                </div>
+              </div>
+            </div>
+
+            <!-- BMI -->
+            <div class="mode-panel" data-mode-panel="bmi" hidden>
+              <div class="form-row">
+                <div>
+                  <label for="bmiHeight">Chiều cao (cm)</label>
+                  <input id="bmiHeight" type="number" min="50" max="250" step="0.1" value="165" />
+                </div>
+                <div>
+                  <label for="bmiWeight">Cân nặng (kg)</label>
+                  <input id="bmiWeight" type="number" min="10" max="300" step="0.1" value="60" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Mật khẩu -->
+            <div class="mode-panel" data-mode-panel="password" hidden>
+              <label for="passwordAction">Chức năng</label>
+              <select id="passwordAction">
+                <option value="generate">Tạo mật khẩu ngẫu nhiên</option>
+                <option value="check">Kiểm tra độ mạnh mật khẩu</option>
+              </select>
+
+              <div data-sub-panel="generate">
+                <div class="form-row">
+                  <div>
+                    <label for="pwLength">Độ dài</label>
+                    <input id="pwLength" type="number" min="4" max="64" step="1" value="16" />
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div>
+                    <label><input type="checkbox" id="pwUpper" checked style="width:auto;display:inline-block;margin-right:0.4rem;" />Chữ hoa (A-Z)</label>
+                  </div>
+                  <div>
+                    <label><input type="checkbox" id="pwLower" checked style="width:auto;display:inline-block;margin-right:0.4rem;" />Chữ thường (a-z)</label>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div>
+                    <label><input type="checkbox" id="pwNumbers" checked style="width:auto;display:inline-block;margin-right:0.4rem;" />Chữ số (0-9)</label>
+                  </div>
+                  <div>
+                    <label><input type="checkbox" id="pwSymbols" style="width:auto;display:inline-block;margin-right:0.4rem;" />Ký tự đặc biệt (!@#$...)</label>
+                  </div>
+                </div>
+              </div>
+
+              <div data-sub-panel="check" hidden>
+                <label for="pwCheckInput">Nhập mật khẩu cần kiểm tra</label>
+                <input id="pwCheckInput" type="text" placeholder="Nhập mật khẩu..." />
+              </div>
+            </div>
+
+            <!-- Random -->
+            <div class="mode-panel" data-mode-panel="random" hidden>
+              <label for="randomAction">Chức năng</label>
+              <select id="randomAction">
+                <option value="range">Chọn số ngẫu nhiên trong khoảng</option>
+                <option value="pick">Bốc thăm từ danh sách</option>
+              </select>
+
+              <div data-sub-panel="range">
+                <div class="form-row">
+                  <div>
+                    <label for="randomMin">Từ số</label>
+                    <input id="randomMin" type="number" step="1" value="1" />
+                  </div>
+                  <div>
+                    <label for="randomMax">Đến số</label>
+                    <input id="randomMax" type="number" step="1" value="100" />
+                  </div>
+                </div>
+              </div>
+
+              <div data-sub-panel="pick" hidden>
+                <label for="randomList">Danh sách (mỗi dòng 1 mục)</label>
+                <textarea id="randomList" rows="5" placeholder="Nguyễn Văn A&#10;Trần Thị B&#10;Lê Văn C">Nguyễn Văn A
+Trần Thị B
+Lê Văn C
+Phạm Thị D</textarea>
+                <div class="form-row">
+                  <div>
+                    <label for="randomPickCount">Số lượng chọn</label>
+                    <input id="randomPickCount" type="number" min="1" step="1" value="1" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- QR -->
+            <div class="mode-panel" data-mode-panel="qr" hidden>
+              <label for="qrText">Văn bản hoặc liên kết</label>
+              <textarea id="qrText" rows="3" placeholder="https://...">https://vietutilityhub.example.com</textarea>
+            </div>
+
+            <div class="actions">
+              <button class="btn-primary" type="submit">Thực hiện</button>
+            </div>
+          </form>
+
+          <div class="result" data-more-output aria-live="polite"></div>
+        </section>
+
+        <aside class="panel">
+          <h2>Lưu ý</h2>
+          <ul>
+            <li>Bảng đổi size giày/quần áo chỉ mang tính tham khảo, có thể khác nhau theo thương hiệu.</li>
+            <li>BMI phân loại theo thang khuyến nghị cho người châu Á (WHO khu vực Tây Thái Bình Dương).</li>
+            <li>Mật khẩu và kết quả random được tạo hoàn toàn trên trình duyệt, không gửi đi bất kỳ đâu.</li>
+          </ul>
+        </aside>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container site-footer__inner">
+        <p class="small">© <span data-year></span> Viet Utility.</p>
+      </div>
+    </footer>
+
+    <script src="../assets/js/site.js"></script>
+    <script src="../assets/js/utils.js"></script>
+    <script src="../assets/js/vendor/qrcode.js"></script>
+    <script src="../assets/js/tools/more-tools.js"></script>
+  </body>
+</html>

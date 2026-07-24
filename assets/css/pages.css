@@ -1,0 +1,52 @@
+.page-header {
+  margin-bottom: 1rem;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: clamp(1.45rem, 2.1vw, 2rem);
+}
+
+.page-header p {
+  margin: 0.7rem 0 0;
+  color: var(--muted);
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: var(--space-3);
+}
+
+.tool-list {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.tool-list a {
+  text-decoration: none;
+  border: 1px solid #e6d4c3;
+  border-radius: 10px;
+  padding: 0.8rem;
+  background: #fff;
+}
+
+.tool-list a:hover {
+  border-color: #d8b295;
+  background: #fff8f1;
+}
+
+.inline-code {
+  font-family: "JetBrains Mono", Consolas, monospace;
+  font-size: 0.9rem;
+  background: #f5ede2;
+  border: 1px solid #e5d4c3;
+  border-radius: 8px;
+  padding: 0.12rem 0.4rem;
+}
+
+@media (max-width: 900px) {
+  .columns {
+    grid-template-columns: 1fr;
+  }
+}

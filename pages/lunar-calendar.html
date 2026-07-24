@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Lịch Âm - Đổi ngày dương sang âm cho người Việt</title>
+    <meta
+      name="description"
+      content="Công cụ đổi ngày dương lịch sang âm lịch theo múi giờ Việt Nam và hiển thị can-chi ngày-tháng-năm."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800&family=JetBrains+Mono:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/css/base.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
+    <link rel="stylesheet" href="../assets/css/pages.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Bo qua menu, toi noi dung</a>
+
+    <header class="site-header">
+      <div class="container site-header__inner">
+        <a class="brand" href="../index.html">Viet <span>Utility</span></a>
+        <nav class="site-nav">
+          <ul class="site-nav__list">
+            <li><a href="../index.html">Trang chủ</a></li>
+            <li><a href="lunar-calendar.html" aria-current="page">Lịch âm</a></li>
+            <li><a href="date-tools.html">Ngày tháng</a></li>
+            <li><a href="finance-tools.html">Tài chính</a></li>
+            <li><a href="text-tools.html">Văn bản</a></li>
+            <li><a href="more-tools.html">Tiện ích khác</a></li>
+          </ul>
+        </nav>
+        
+        <label for="nav-mobile-toggle" class="nav-hamburger" aria-label="Toggle navigation menu">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" aria-hidden="true">
+            <path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z" />
+          </svg>
+        </label>
+        <input type="checkbox" id="nav-mobile-toggle" class="nav-mobile-input" aria-hidden="true" />
+        <label for="nav-mobile-toggle" class="nav-mobile-overlay" aria-hidden="true"></label>
+        
+        <div class="nav-mobile-drawer">
+          <div class="nav-mobile-header">
+            <label for="nav-mobile-toggle" class="nav-mobile-close" aria-label="Close navigation">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" aria-hidden="true">
+                <path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" />
+              </svg>
+            </label>
+          </div>
+          <ul class="nav-mobile-list">
+            <li><a href="../index.html">Trang chủ</a></li>
+            <li><a href="lunar-calendar.html">Lịch âm</a></li>
+            <li><a href="date-tools.html">Ngày tháng</a></li>
+            <li><a href="finance-tools.html">Tài chính</a></li>
+            <li><a href="text-tools.html">Văn bản</a></li>
+            <li><a href="more-tools.html">Tiện ích khác</a></li>
+          </ul>
+        </div>
+      </div>
+    </header>
+
+    <main id="main">
+      <div class="container columns">
+        <section class="panel">
+          <header class="page-header">
+            <h1>Lịch âm và can-chi</h1>
+          </header>
+
+          <form data-lunar-form>
+            <label for="solarDate">Ngày dương lịch</label>
+            <input id="solarDate" type="date" required />
+            <div class="actions">
+              <button class="btn-primary" type="submit">Xem kết quả</button>
+            </div>
+          </form>
+
+          <div class="result" data-lunar-output aria-live="polite"></div>
+          <div class="result" data-lunar-nearest aria-live="polite"></div>
+        </section>
+
+        <aside class="panel">
+          <div class="lunar-month-cal" data-lunar-month-cal>
+            <div class="lunar-month-cal__title-row">
+              <h2>Lịch tháng</h2>
+              <button type="button" class="lunar-month-cal__today" data-cal-today>Quay về ngày hiện tại</button>
+            </div>
+            <div class="lunar-month-cal__header">
+              <button type="button" class="lunar-month-cal__nav" data-cal-prev aria-label="Tháng trước">&#8249;</button>
+              <h3 data-cal-title>Tháng &nbsp;</h3>
+              <button type="button" class="lunar-month-cal__nav" data-cal-next aria-label="Tháng sau">&#8250;</button>
+            </div>
+            <div class="lunar-month-cal__weekdays">
+              <span>T2</span><span>T3</span><span>T4</span><span>T5</span><span>T6</span><span>T7</span><span>CN</span>
+            </div>
+            <div class="lunar-month-cal__grid" data-cal-grid></div>
+            <p class="lunar-month-cal__legend">
+              <span class="legend-dot legend-dot--mung1"></span>Mùng 1
+              <span class="legend-dot legend-dot--ram"></span>Ngày rằm
+              <span class="legend-dot legend-dot--today"></span>Hôm nay
+            </p>
+          </div>
+          <!-- <p class="notice">Thuật toán chạy 100% trên trình duyệt, không gửi dữ liệu cá nhân lên server.</p> -->
+        </aside>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container site-footer__inner">
+        <p class="small">© <span data-year></span> Viet Utility.</p>
+      </div>
+    </footer>
+
+    <script src="../assets/js/site.js"></script>
+    <script src="../assets/js/utils.js"></script>
+    <script src="../assets/js/tools/lunar.js"></script>
+  </body>
+</html>
