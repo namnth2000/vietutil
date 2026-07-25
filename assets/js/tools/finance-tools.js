@@ -2,23 +2,24 @@
   "use strict";
 
   // Bậc thuế TNCN lũy tiến từng phần (thu nhập từ tiền lương/tiền công), đơn vị VND/tháng.
+  // Biểu thuế 5 bậc theo Luật Thuế TNCN số 109/2025/QH15, áp dụng cho kỳ tính thuế từ 01/01/2026.
   const TNCN_BRACKETS = [
-    { upTo: 5000000, rate: 0.05 },
-    { upTo: 10000000, rate: 0.1 },
-    { upTo: 18000000, rate: 0.15 },
-    { upTo: 32000000, rate: 0.2 },
-    { upTo: 52000000, rate: 0.25 },
-    { upTo: 80000000, rate: 0.3 },
+    { upTo: 10000000, rate: 0.05 },
+    { upTo: 30000000, rate: 0.1 },
+    { upTo: 60000000, rate: 0.2 },
+    { upTo: 100000000, rate: 0.3 },
     { upTo: Infinity, rate: 0.35 }
   ];
-  const GT_BAN_THAN = 11000000;
-  const GT_NGUOI_PHU_THUOC = 4400000;
-  const LUONG_CO_SO = 2340000; // dùng làm trần đóng BHXH/BHYT (20 lần lương cơ sở)
+  // Giảm trừ gia cảnh mới theo Nghị quyết số 110/2025/UBTVQH15, áp dụng từ 01/01/2026.
+  const GT_BAN_THAN = 15500000;
+  const GT_NGUOI_PHU_THUOC = 6200000;
+  const LUONG_CO_SO = 2530000; // dùng làm trần đóng BHXH/BHYT (20 lần lương cơ sở), hiệu lực từ 01/07/2026
+  // Mức lương tối thiểu vùng mới, hiệu lực từ 01/01/2026 (Nghị định số 293/2025/NĐ-CP).
   const VUNG_LUONG_TOI_THIEU = {
-    "1": 4960000,
-    "2": 4410000,
-    "3": 3860000,
-    "4": 3450000
+    "1": 5310000,
+    "2": 4730000,
+    "3": 4140000,
+    "4": 3700000
   };
 
   const VIETQR_BANKS = [
@@ -42,22 +43,30 @@
   ];
 
   function calcTNCN(taxableIncome) {
-    let remaining = Math.max(0, taxableIncome);
+    const income = Math.max(0, taxableIncome);
+    let remaining = income;
     let tax = 0;
     let previousUpTo = 0;
-    for (let i = 0; i < TNCN_BRACKETS.length; i += 1) {
-      const bracket = TNCN_BRACKETS[i];
+    const breakdown = TNCN_BRACKETS.map(function (bracket) {
       const bracketWidth = bracket.upTo - previousUpTo;
-      const amountInBracket = Math.min(remaining, bracketWidth);
-      if (amountInBracket <= 0) break;
-      tax += amountInBracket * bracket.rate;
-      remaining -= amountInBracket;
+      const amountInBracket = Math.max(0, Math.min(remaining, bracketWidth));
+      const taxInBracket = amountInBracket * bracket.rate;
+      tax += taxInBracket;
+      remaining = Math.max(0, remaining - amountInBracket);
+      const row = {
+        from: previousUpTo,
+        upTo: bracket.upTo,
+        rate: bracket.rate,
+        taxableAmount: amountInBracket,
+        taxAmount: taxInBracket
+      };
       previousUpTo = bracket.upTo;
-      if (remaining <= 0) break;
-    }
-    return tax;
+      return row;
+    });
+    return { tax, breakdown };
   }
 
+  // Bảo hiểm phần người lao động đóng: BHXH 8%, BHYT 1,5%, BHTN 1%.
   function computeInsurance(grossSalary, regionMin) {
     const bhxhBhytBase = Math.min(grossSalary, 20 * LUONG_CO_SO);
     const bhtnBase = Math.min(grossSalary, 20 * regionMin);
@@ -67,14 +76,39 @@
     return { bhxh, bhyt, bhtn, total: bhxh + bhyt + bhtn };
   }
 
+  // Bảo hiểm phần người sử dụng lao động đóng: BHXH 17%, BHTNLĐ-BNN 0,5%, BHYT 3%, BHTN 1%.
+  function computeEmployerInsurance(grossSalary, regionMin) {
+    const bhxhBhytBase = Math.min(grossSalary, 20 * LUONG_CO_SO);
+    const bhtnBase = Math.min(grossSalary, 20 * regionMin);
+    const bhxh = bhxhBhytBase * 0.17;
+    const tnldBnn = bhxhBhytBase * 0.005;
+    const bhyt = bhxhBhytBase * 0.03;
+    const bhtn = bhtnBase * 0.01;
+    return { bhxh, tnldBnn, bhyt, bhtn, total: bhxh + tnldBnn + bhyt + bhtn };
+  }
+
   function grossToNet(gross, dependents, regionMin) {
     const insurance = computeInsurance(gross, regionMin);
     const preTaxIncome = gross - insurance.total;
-    const deduction = GT_BAN_THAN + GT_NGUOI_PHU_THUOC * dependents;
+    const deductionBanThan = GT_BAN_THAN;
+    const deductionPhuThuoc = GT_NGUOI_PHU_THUOC * dependents;
+    const deduction = deductionBanThan + deductionPhuThuoc;
     const taxableIncome = Math.max(0, preTaxIncome - deduction);
-    const tax = calcTNCN(taxableIncome);
-    const net = preTaxIncome - tax;
-    return { insurance, preTaxIncome, deduction, taxableIncome, tax, net };
+    const tncn = calcTNCN(taxableIncome);
+    const net = preTaxIncome - tncn.tax;
+    const employerInsurance = computeEmployerInsurance(gross, regionMin);
+    return {
+      insurance,
+      preTaxIncome,
+      deduction,
+      deductionBanThan,
+      deductionPhuThuoc,
+      taxableIncome,
+      tncn,
+      tax: tncn.tax,
+      net,
+      employerInsurance
+    };
   }
 
   function netToGross(targetNet, dependents, regionMin) {
@@ -126,6 +160,96 @@
     return balance;
   }
 
+  function formatVnd(amount) {
+    return window.VUH.formatNumber(Math.round(amount));
+  }
+
+  function bracketRangeLabel(row) {
+    const fromLabel = formatVnd(row.from);
+    const upToLabel = formatVnd(row.upTo);
+    if (row.upTo === Infinity) {
+      return "Trên " + fromLabel + " VNĐ";
+    }
+    if (row.from === 0) {
+      return "Đến " + upToLabel + " VNĐ";
+    }
+    return "Trên " + fromLabel + " đến " + upToLabel + " VNĐ";
+  }
+
+  function buildTncnBracketTableHtml(breakdown) {
+    const rows = breakdown
+      .map(function (row) {
+        return [
+          "<tr>",
+          "<td>" + bracketRangeLabel(row) + "</td>",
+          "<td>" + Math.round(row.rate * 100) + "%</td>",
+          "<td>" + formatVnd(row.taxableAmount) + " đ</td>",
+          "<td>" + formatVnd(row.taxAmount) + " đ</td>",
+          "</tr>"
+        ].join("");
+      })
+      .join("");
+
+    return [
+      "<h3>Chi tiết thuế TNCN theo từng bậc</h3>",
+      "<table class=\"detail-table\">",
+      "<thead><tr><th>Mức chịu thuế</th><th>Thuế suất</th><th>Thu nhập chịu thuế</th><th>Tiền nộp</th></tr></thead>",
+      "<tbody>" + rows + "</tbody>",
+      "</table>"
+    ].join("");
+  }
+
+  function buildGrossNetDetailHtml(gross, dependents, detail) {
+    const rows = [
+      ["Lương GROSS", formatVnd(gross), false],
+      ["Bảo hiểm xã hội (8%)", "- " + formatVnd(detail.insurance.bhxh), false],
+      ["Bảo hiểm y tế (1,5%)", "- " + formatVnd(detail.insurance.bhyt), false],
+      ["Bảo hiểm thất nghiệp (1%)", "- " + formatVnd(detail.insurance.bhtn), false],
+      ["Thu nhập trước thuế", formatVnd(detail.preTaxIncome), false],
+      ["Giảm trừ gia cảnh bản thân", "- " + formatVnd(detail.deductionBanThan), false]
+    ];
+    if (dependents > 0) {
+      rows.push(["Giảm trừ gia cảnh người phụ thuộc (" + dependents + " người)", "- " + formatVnd(detail.deductionPhuThuoc), false]);
+    }
+    rows.push(["Thu nhập chịu thuế", formatVnd(detail.taxableIncome), false]);
+    rows.push(["Thuế thu nhập cá nhân", "- " + formatVnd(detail.tax), false]);
+    rows.push(["Lương NET (thu nhập trước thuế - thuế TNCN)", formatVnd(detail.net) + " đ", true]);
+
+    const employeeRowsHtml = rows
+      .map(function (row) {
+        const cls = row[2] ? " class=\"detail-table__total\"" : "";
+        const valueSuffix = String(row[1]).endsWith("đ") ? "" : " đ";
+        return "<tr" + cls + "><td>" + row[0] + "</td><td>" + row[1] + valueSuffix + "</td></tr>";
+      })
+      .join("");
+
+    const employer = detail.employerInsurance;
+    const employerTotal = gross + employer.total;
+    const employerRows = [
+      ["Lương GROSS", formatVnd(gross)],
+      ["Bảo hiểm xã hội (17%)", formatVnd(employer.bhxh)],
+      ["Bảo hiểm tai nạn lao động - bệnh nghề nghiệp (0,5%)", formatVnd(employer.tnldBnn)],
+      ["Bảo hiểm y tế (3%)", formatVnd(employer.bhyt)],
+      ["Bảo hiểm thất nghiệp (1%)", formatVnd(employer.bhtn)]
+    ];
+    const employerRowsHtml = employerRows
+      .map(function (row) {
+        return "<tr><td>" + row[0] + "</td><td>" + row[1] + " đ</td></tr>";
+      })
+      .join("");
+
+    return [
+      "<h3>Diễn giải chi tiết (VNĐ)</h3>",
+      "<table class=\"detail-table\"><tbody>" + employeeRowsHtml + "</tbody></table>",
+      buildTncnBracketTableHtml(detail.tncn.breakdown),
+      "<h3>Người sử dụng lao động trả (VNĐ)</h3>",
+      "<table class=\"detail-table\">",
+      "<tbody>" + employerRowsHtml + "<tr class=\"detail-table__total\"><td>Tổng cộng</td><td>" + formatVnd(employerTotal) + " đ</td></tr></tbody>",
+      "</table>",
+      "<p class=\"notice\">Số liệu tham khảo theo quy định hiện hành: lương cơ sở 2.530.000đ/tháng, giảm trừ bản thân 15.500.000đ/tháng, người phụ thuộc 6.200.000đ/tháng, biểu thuế TNCN 5 bậc (Luật số 109/2025/QH15, áp dụng từ kỳ tính thuế năm 2026).</p>"
+    ].join("");
+  }
+
   function initFinanceTools() {
     const form = document.querySelector("[data-finance-form]");
     const output = document.querySelector("[data-finance-output]");
@@ -157,6 +281,8 @@
     const vietqrName = form.querySelector("#vietqrName");
     const vietqrAmount = form.querySelector("#vietqrAmount");
     const vietqrMessage = form.querySelector("#vietqrMessage");
+
+    const detailModalContent = document.querySelector("#modal-finance-detail [data-modal-detail-content]");
 
     if (vietqrBank && !vietqrBank.dataset.filled) {
       vietqrBank.innerHTML = VIETQR_BANKS.map(function (bank) {
@@ -244,17 +370,22 @@
 
       const deduction = GT_BAN_THAN + GT_NGUOI_PHU_THUOC * dependents;
       const taxableIncome = Math.max(0, income - deduction);
-      const tax = calcTNCN(taxableIncome);
-      const afterTax = income - tax;
+      const tncn = calcTNCN(taxableIncome);
+      const afterTax = income - tncn.tax;
+
+      if (detailModalContent) {
+        detailModalContent.innerHTML = buildTncnBracketTableHtml(tncn.breakdown);
+      }
 
       output.innerHTML = [
         "<div class=\"kpi\">",
         "<div class=\"tile\"><span>Giảm trừ gia cảnh</span><b>" + window.VUH.formatNumber(Math.round(deduction)) + " VND</b></div>",
         "<div class=\"tile\"><span>Thu nhập chịu thuế</span><b>" + window.VUH.formatNumber(Math.round(taxableIncome)) + " VND</b></div>",
-        "<div class=\"tile\"><span>Thuế TNCN phải nộp</span><b>" + window.VUH.formatNumber(Math.round(tax)) + " VND</b></div>",
+        "<div class=\"tile\"><span>Thuế TNCN phải nộp</span><b>" + window.VUH.formatNumber(Math.round(tncn.tax)) + " VND</b></div>",
         "<div class=\"tile\"><span>Thu nhập còn lại</span><b>" + window.VUH.formatNumber(Math.round(afterTax)) + " VND</b></div>",
         "</div>",
-        "<p class=\"small\">Tính theo biểu thuế lũy tiến từng phần 7 bậc, giảm trừ bản thân 11 triệu/tháng và người phụ thuộc 4,4 triệu/tháng. Chưa gồm các khoản giảm trừ khác (bảo hiểm, từ thiện...).</p>"
+        "<p class=\"small\">Tính theo biểu thuế lũy tiến từng phần 5 bậc (Luật số 109/2025/QH15), giảm trừ bản thân 15,5 triệu/tháng và người phụ thuộc 6,2 triệu/tháng. Chưa gồm các khoản giảm trừ khác (bảo hiểm, từ thiện...).</p>",
+        "<button type=\"button\" class=\"btn-ghost\" data-modal-open=\"modal-finance-detail\">Xem diễn giải chi tiết</button>"
       ].join("");
     }
 
@@ -279,6 +410,10 @@
         detail = grossToNet(gross, dependents, regionMin);
       }
 
+      if (detailModalContent) {
+        detailModalContent.innerHTML = buildGrossNetDetailHtml(gross, dependents, detail);
+      }
+
       output.innerHTML = [
         "<div class=\"kpi\">",
         "<div class=\"tile\"><span>Lương Gross</span><b>" + window.VUH.formatNumber(Math.round(gross)) + " VND</b></div>",
@@ -286,7 +421,8 @@
         "<div class=\"tile\"><span>Thuế TNCN</span><b>" + window.VUH.formatNumber(Math.round(detail.tax)) + " VND</b></div>",
         "<div class=\"tile\"><span>Lương Net thực nhận</span><b>" + window.VUH.formatNumber(Math.round(detail.net)) + " VND</b></div>",
         "</div>",
-        "<p class=\"small\">BHXH 8% + BHYT 1,5% (trần 20 lần lương cơ sở 2.340.000đ) và BHTN 1% (trần 20 lần lương tối thiểu vùng). Kết quả Net → Gross là giá trị gần đúng dò ngược.</p>"
+        "<p class=\"small\">BHXH 8% + BHYT 1,5% (trần 20 lần lương cơ sở 2.530.000đ) và BHTN 1% (trần 20 lần lương tối thiểu vùng). Kết quả Net → Gross là giá trị gần đúng dò ngược.</p>",
+        "<button type=\"button\" class=\"btn-ghost\" data-modal-open=\"modal-finance-detail\">Xem diễn giải chi tiết (gồm phần người sử dụng lao động trả)</button>"
       ].join("");
     }
 

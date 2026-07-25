@@ -95,6 +95,28 @@ textarea {
   background: #fff;
 }
 
+/* iOS Safari gives date/time inputs an intrinsic content width that can overflow
+   their grid/flex container ("oversize") unless appearance is reset and a min-width
+   of 0 is forced. Also center the picker text to match other inputs visually. */
+input[type="date"],
+input[type="time"],
+input[type="datetime-local"],
+input[type="month"] {
+  -webkit-appearance: none;
+  appearance: none;
+  min-width: 0;
+  max-width: 100%;
+  text-align: center;
+}
+
+input[type="date"]::-webkit-date-and-time-value,
+input[type="time"]::-webkit-date-and-time-value,
+input[type="datetime-local"]::-webkit-date-and-time-value,
+input[type="month"]::-webkit-date-and-time-value {
+  text-align: center;
+  width: 100%;
+}
+
 select[size] {
   position: absolute;
   top: 0;
@@ -418,6 +440,133 @@ button {
   color: var(--muted);
   font-size: 0.8rem;
   text-transform: uppercase;
+}
+
+.detail-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  margin: 0.6rem 0 1.1rem;
+}
+
+.detail-table th,
+.detail-table td {
+  text-align: left;
+  padding: 0.45rem 0.6rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.detail-table td:last-child,
+.detail-table th:last-child {
+  text-align: right;
+}
+
+.detail-table th {
+  color: var(--muted);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+}
+
+.detail-table tr.detail-table__total td {
+  font-weight: 700;
+  color: var(--brand-strong);
+  border-bottom: none;
+}
+
+.info-link {
+  background: none;
+  border: none;
+  width: auto;
+  padding: 0;
+  margin-left: 0.4rem;
+  color: var(--brand-strong);
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* Generic modal/popup system (see site.js for the open/close behavior). */
+body.modal-open {
+  overflow: hidden;
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgb(31 29 26 / 55%);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 5vh 1rem;
+  overflow-y: auto;
+}
+
+.modal__box {
+  position: relative;
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  max-width: 640px;
+  width: 100%;
+  padding: var(--space-4);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal__box h2 {
+  margin-top: 0;
+  font-size: 1.2rem;
+  padding-right: 2rem;
+}
+
+.modal__close {
+  position: absolute;
+  top: 0.7rem;
+  right: 0.7rem;
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 999px;
+  background: #f8e5d9;
+  color: var(--brand-strong);
+  font-size: 1.2rem;
+  line-height: 1;
+  padding: 0;
+  cursor: pointer;
+}
+
+.modal__close:hover {
+  background: #f2d2bd;
+}
+
+.region-info__rates {
+  margin: 0 0 1rem;
+  padding-left: 1.2rem;
+}
+
+.region-info__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  max-height: 45vh;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.5rem 0.7rem;
+}
+
+.region-info__list summary {
+  cursor: pointer;
+  font-weight: 700;
+  padding: 0.3rem 0;
+}
+
+.region-info__list ul {
+  margin: 0.3rem 0 0.6rem;
+  padding-left: 1.2rem;
+  font-size: 0.9rem;
+  color: var(--muted);
 }
 
 @media (max-width: 960px) {

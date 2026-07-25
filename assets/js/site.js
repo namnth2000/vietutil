@@ -88,4 +88,62 @@
   // "load" to catch selects whose options are filled in dynamically by other page scripts.
   enableScrollableSelects();
   window.addEventListener("load", enableScrollableSelects);
+
+  // Generic modal/popup system, reusable across pages.
+  // Markup contract:
+  //   <div class="modal" id="my-modal" data-modal hidden>
+  //     <div class="modal__box" role="dialog" aria-modal="true">
+  //       <button type="button" class="modal__close" data-modal-close aria-label="Đóng">×</button>
+  //       ...content...
+  //     </div>
+  //   </div>
+  // Any element with [data-modal-open="my-modal"] opens it. Clicking [data-modal-close],
+  // the dark backdrop itself, or pressing Escape closes the currently open modal(s).
+  const allModals = Array.from(document.querySelectorAll("[data-modal]"));
+
+  if (allModals.length > 0) {
+    function openModal(modal) {
+      modal.hidden = false;
+      document.body.classList.add("modal-open");
+    }
+    function closeModal(modal) {
+      modal.hidden = true;
+      document.body.classList.remove("modal-open");
+    }
+
+    document.addEventListener("click", function (event) {
+      const opener = event.target.closest("[data-modal-open]");
+      if (opener) {
+        const modal = document.getElementById(opener.getAttribute("data-modal-open"));
+        if (modal) {
+          event.preventDefault();
+          openModal(modal);
+        }
+        return;
+      }
+
+      const closer = event.target.closest("[data-modal-close]");
+      if (closer) {
+        const modal = closer.closest("[data-modal]");
+        if (modal) {
+          closeModal(modal);
+        }
+        return;
+      }
+
+      if (event.target.matches("[data-modal]")) {
+        closeModal(event.target);
+      }
+    });
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") {
+        allModals.forEach(function (modal) {
+          if (!modal.hidden) {
+            closeModal(modal);
+          }
+        });
+      }
+    });
+  }
 })();
