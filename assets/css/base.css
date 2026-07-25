@@ -30,10 +30,14 @@
 
 html {
   scroll-behavior: smooth;
+  height: 100%;
 }
 
 body {
   margin: 0;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
   font-family: "Be Vietnam Pro", "Segoe UI", sans-serif;
   color: var(--text);
   background:
@@ -284,12 +288,14 @@ img {
 
 main {
   padding: var(--space-5) 0 3rem;
+  flex: 1 0 auto;
 }
 
 .site-footer {
   border-top: 1px solid var(--border);
   margin-top: 2rem;
   background: #f9f1e6;
+  flex-shrink: 0;
 }
 
 .site-footer__inner {
@@ -299,6 +305,37 @@ main {
   justify-content: space-between;
   gap: var(--space-3);
   flex-wrap: wrap;
+}
+
+.site-footer__social {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-left: auto;
+}
+
+.site-footer__social a {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background: #f5e1d3;
+  color: var(--brand-strong);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.site-footer__social a:hover {
+  background: var(--brand);
+  color: #fff;
+}
+
+.site-footer__social svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+  display: block;
 }
 
 .small {
