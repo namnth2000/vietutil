@@ -278,10 +278,12 @@
       if (lunar.lunarDay === 1) classes.push("cal-day--mung1");
       if (lunar.lunarDay === 15) classes.push("cal-day--ram");
 
+      const lunarLabel = lunar.lunarDay === 1 ? lunar.lunarDay + "/" + lunar.lunarMonth : String(lunar.lunarDay);
+
       cells.push(
         '<button type="button" class="' + classes.join(" ") + '" data-date="' + dateStr + '">' +
           '<span class="cal-day__solar">' + day + "</span>" +
-          '<span class="cal-day__lunar">' + lunar.lunarDay + "</span>" +
+          '<span class="cal-day__lunar">' + lunarLabel + "</span>" +
         "</button>"
       );
     }
