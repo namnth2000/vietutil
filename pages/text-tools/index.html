@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Tiện ích ngày tháng - Tuổi, ngày làm việc, đếm ngược Tết</title>
+    <title>Công cụ văn bản - Bỏ dấu, đổi kiểu chữ, đếm số từ</title>
     <meta
       name="description"
-      content="Tính tuổi, đếm số ngày giữa hai mốc, tính ngày làm việc, đếm ngược đến Tết, tính ngày dự sinh."
+      content="Công cụ xử lý văn bản cho người dùng Việt: bỏ dấu tiếng Việt, uppercase/lowercase/title case, đếm số từ và ký tự."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -14,24 +14,24 @@
       href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800&family=JetBrains+Mono:wght@500&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="../assets/css/base.css" />
-    <link rel="stylesheet" href="../assets/css/components.css" />
-    <link rel="stylesheet" href="../assets/css/pages.css" />
+    <link rel="stylesheet" href="../../assets/css/base.css" />
+    <link rel="stylesheet" href="../../assets/css/components.css" />
+    <link rel="stylesheet" href="../../assets/css/pages.css" />
   </head>
   <body>
     <a class="skip-link" href="#main">Bo qua menu, toi noi dung</a>
 
     <header class="site-header">
       <div class="container site-header__inner">
-        <a class="brand" href="../index.html">Viet <span>Utility</span></a>
+        <a class="brand" href="../../index.html">Viet <span>Utility</span></a>
         <nav class="site-nav">
           <ul class="site-nav__list">
-            <li><a href="../index.html">Trang chủ</a></li>
-            <li><a href="lunar-calendar.html">Lịch âm</a></li>
-            <li><a href="date-tools.html" aria-current="page">Ngày tháng</a></li>
-            <li><a href="finance-tools.html">Tài chính</a></li>
-            <li><a href="text-tools.html">Văn bản</a></li>
-            <li><a href="more-tools.html">Tiện ích khác</a></li>
+            <li><a href="../../index.html">Trang chủ</a></li>
+            <li><a href="../lunar-calendar/">Lịch âm</a></li>
+            <li><a href="../date-tools/">Ngày tháng</a></li>
+            <li><a href="../finance-tools/">Tài chính</a></li>
+            <li><a href="../text-tools/" aria-current="page">Văn bản</a></li>
+            <li><a href="../more-tools/">Tiện ích khác</a></li>
           </ul>
         </nav>
         
@@ -52,12 +52,12 @@
             </label>
           </div>
           <ul class="nav-mobile-list">
-            <li><a href="../index.html">Trang chủ</a></li>
-            <li><a href="lunar-calendar.html">Lịch âm</a></li>
-            <li><a href="date-tools.html">Ngày tháng</a></li>
-            <li><a href="finance-tools.html">Tài chính</a></li>
-            <li><a href="text-tools.html">Văn bản</a></li>
-            <li><a href="more-tools.html">Tiện ích khác</a></li>
+            <li><a href="../../index.html">Trang chủ</a></li>
+            <li><a href="../lunar-calendar/">Lịch âm</a></li>
+            <li><a href="../date-tools/">Ngày tháng</a></li>
+            <li><a href="../finance-tools/">Tài chính</a></li>
+            <li><a href="../text-tools/">Văn bản</a></li>
+            <li><a href="../more-tools/">Tiện ích khác</a></li>
           </ul>
         </div>
       </div>
@@ -67,76 +67,67 @@
       <div class="container columns">
         <section class="panel">
           <header class="page-header">
-            <h1>Tiện ích ngày tháng</h1>
-            <p>Tính tuổi, số ngày làm việc, đếm ngược đến Tết, tính ngày dự sinh.</p>
+            <h1>Công cụ xử lý văn bản</h1>
+            <p>Bỏ dấu tiếng Việt, đổi kiểu chữ, đếm số từ và ký tự.</p>
           </header>
 
-          <form data-date-form>
-            <label for="toolMode">Chọn tính năng</label>
-            <select id="toolMode" data-tool-mode>
-              <option value="age">Tính tuổi hiện tại</option>
-              <option value="workdays">Tính số ngày làm việc</option>
-              <option value="tet">Đếm ngược Tết Âm lịch</option>
-              <option value="pregnancy">Tính ngày dự sinh, tuổi thai</option>
-              <option value="countdown">Đếm ngược sự kiện tùy chỉnh</option>
-            </select>
+          <form data-text-form>
+            <label for="sourceText">Văn bản đầu vào</label>
+            <textarea id="sourceText" rows="6" placeholder="Nhập nội dung cần xử lý...">Tôi đang dùng bộ công cụ miễn phí cho người Việt.</textarea>
 
-            <div class="mode-panel" data-mode-panel="age">
-              <label for="birthDate">Ngày sinh</label>
-              <input id="birthDate" type="date" required />
-            </div>
-
-            <div class="mode-panel" data-mode-panel="workdays" hidden>
-              <div class="form-row">
-                <div>
-                  <label for="fromDate">Từ ngày</label>
-                  <input id="fromDate" type="date" required />
-                </div>
-                <div>
-                  <label for="toDate">Đến ngày</label>
-                  <input id="toDate" type="date" required />
-                </div>
+            <div class="form-row">
+              <div>
+                <label for="textMode">Chế độ xử lý</label>
+                <select id="textMode">
+                  <option value="remove-accent">Bỏ dấu tiếng Việt</option>
+                  <option value="upper">IN HOA</option>
+                  <option value="lower">in thường</option>
+                  <option value="title">Title Case</option>
+                  <option value="pascal">PascalCase</option>
+                  <option value="camel">camelCase</option>
+                  <option value="snake">snake_case</option>
+                  <option value="kebab">kebab-case</option>
+                  <option value="constant">CONSTANT_CASE</option>
+                  <option value="underline">Gạch dưới chữ</option>
+                  <option value="strike">Gạch ngang chữ</option>
+                  <option value="bold">In đậm (Unicode)</option>
+                  <option value="italic">In nghiêng (Unicode)</option>
+                  <option value="wordfreq">Đếm tần suất từ khóa</option>
+                  <option value="seotrim">Rút gọn SEO meta description</option>
+                  <option value="base64-encode">Mã hóa Base64</option>
+                  <option value="base64-decode">Giải mã Base64</option>
+                  <option value="url-encode">Mã hóa URL</option>
+                  <option value="url-decode">Giải mã URL</option>
+                </select>
               </div>
             </div>
 
-            <div class="mode-panel" data-mode-panel="tet" hidden>
-              <p class="small">Hệ thống tự động đếm ngược từ ngày hôm nay đến mùng 1 Tết Âm lịch gần nhất.</p>
-            </div>
-
-            <div class="mode-panel" data-mode-panel="pregnancy" hidden>
-              <label for="lmpDate">Ngày đầu kỳ kinh cuối cùng</label>
-              <input id="lmpDate" type="date" />
-            </div>
-
-            <div class="mode-panel" data-mode-panel="countdown" hidden>
-              <div class="form-row">
-                <div>
-                  <label for="eventName">Tên sự kiện</label>
-                  <input id="eventName" type="text" placeholder="VD: Ngày cưới, sinh nhật..." />
-                </div>
-                <div>
-                  <label for="eventDate">Ngày diễn ra</label>
-                  <input id="eventDate" type="date" />
-                </div>
+            <div class="form-row" id="seoOptionsRow" hidden>
+              <div>
+                <label for="seoMaxLength">Số ký tự tối đa</label>
+                <input id="seoMaxLength" type="number" min="20" max="320" step="1" value="160" />
               </div>
             </div>
 
             <div class="actions">
-              <button class="btn-primary" type="submit">Tính kết quả</button>
+              <button class="btn-primary" type="submit">Xử lý văn bản</button>
+              <button class="btn-ghost" type="button" data-copy-result>Sao chép kết quả</button>
             </div>
           </form>
 
-          <div class="result" data-date-output aria-live="polite"></div>
+          <div class="result" data-text-output aria-live="polite"></div>
         </section>
 
         <aside class="panel">
-          <h2>Hướng dẫn nhanh</h2>
-          <ol>
-            <li>Chọn 1 trong 5 tính năng ở danh sách xổ xuống.</li>
-            <li>Nhập dữ liệu tương ứng rồi bấm "Tính kết quả".</li>
-            <li>Riêng đếm ngược Tết sẽ tự động tính từ ngày hôm nay.</li>
-          </ol>
-          <p class="small">Ngày làm việc hiện tại tính theo thứ 2 - thứ 6, chưa trừ lễ quốc gia.</p>
+          <h2>Tình huống ứng dụng</h2>
+          <ul>
+            <li>Tạo slug URL, tên file không dấu.</li>
+            <li>Làm sạch nội dung để nhập hệ thống chỉ hỗ trợ ASCII.</li>
+            <li>Kiểm tra nhanh độ dài văn bản trước khi đăng bài.</li>
+          </ul>
+          <p class="notice">In đậm/In nghiêng dùng ký tự Unicode đặc biệt (dán được vào Facebook, Zalo...), chỉ áp dụng cho chữ cái/số không dấu (a-z, A-Z, 0-9); ký tự có dấu tiếng Việt giữ nguyên.</p>
+          <p class="notice">Gạch dưới/Gạch ngang cũng dùng ký tự Unicode nên áp dụng được cho mọi ký tự, kể cả có dấu.</p>
+          <p class="notice">Mã hóa/Giải mã và đếm tần suất từ chạy hoàn toàn trên trình duyệt, không gửi nội dung lên máy chủ nào.</p>
         </aside>
       </div>
     </main>
@@ -161,9 +152,8 @@
       </div>
     </footer>
 
-    <script src="../assets/js/site.js"></script>
-    <script src="../assets/js/utils.js"></script>
-    <script src="../assets/js/tools/lunar.js"></script>
-    <script src="../assets/js/tools/date-tools.js"></script>
+    <script src="../../assets/js/site.js"></script>
+    <script src="../../assets/js/utils.js"></script>
+    <script src="../../assets/js/tools/text-tools.js"></script>
   </body>
 </html>

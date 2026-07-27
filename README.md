@@ -17,6 +17,11 @@ text normalization, and basic finance calculators.
 |   `-- js/
 |       `-- tools/
 |-- pages/
+|   |-- date-tools/
+|   |-- finance-tools/
+|   |-- lunar-calendar/
+|   |-- more-tools/
+|   `-- text-tools/
 |-- skills/
 |   `-- vietnamese-utility-site/
 |       `-- SKILL.md
