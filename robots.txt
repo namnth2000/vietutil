@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://vietutil.namnth.com/vietutil/sitemap.xml
+Sitemap: https://vietutil.namnth.com/sitemap.xml

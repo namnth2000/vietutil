@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
    <url>
-      <loc>https://vietutil.namnth.com/vietutil/</loc>
+      <loc>https://vietutil.namnth.com/</loc>
       <changefreq>weekly</changefreq>
       <priority>1.0</priority>
    </url>
    <url>
-      <loc>https://vietutil.namnth.com/vietutil/pages/lunar-calendar/</loc>
+      <loc>https://vietutil.namnth.com/pages/lunar-calendar/</loc>
       <changefreq>weekly</changefreq>
       <priority>0.9</priority>
    </url>
    <url>
-      <loc>https://vietutil.namnth.com/vietutil/pages/date-tools/</loc>
+      <loc>https://vietutil.namnth.com/pages/date-tools/</loc>
       <changefreq>weekly</changefreq>
       <priority>0.9</priority>
    </url>
    <url>
-      <loc>https://vietutil.namnth.com/vietutil/pages/finance-tools/</loc>
+      <loc>https://vietutil.namnth.com/pages/finance-tools/</loc>
       <changefreq>weekly</changefreq>
       <priority>0.8</priority>
    </url>
    <url>
-      <loc>https://vietutil.namnth.com/vietutil/pages/text-tools/</loc>
+      <loc>https://vietutil.namnth.com/pages/text-tools/</loc>
       <changefreq>weekly</changefreq>
       <priority>0.8</priority>
    </url>
    <url>
-      <loc>https://vietutil.namnth.com/vietutil/pages/more-tools/</loc>
+      <loc>https://vietutil.namnth.com/pages/more-tools/</loc>
       <changefreq>weekly</changefreq>
       <priority>0.7</priority>
    </url>
