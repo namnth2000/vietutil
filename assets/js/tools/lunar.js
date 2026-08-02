@@ -4,6 +4,8 @@
   const CAN = ["Giáp", "Ất", "Bính", "Đinh", "Mậu", "Kỷ", "Canh", "Tân", "Nhâm", "Quý"];
   const CHI = ["Tý", "Sửu", "Dần", "Mão", "Thìn", "Tỵ", "Ngọ", "Mùi", "Thân", "Dậu", "Tuất", "Hợi"];
   const TZ = 7;
+  const NEW_MOON_EPOCH = 2451550.09765;
+  const SYNODIC_MONTH = 29.530588853;
 
   function INT(value) {
     return Math.floor(value);
@@ -21,36 +23,130 @@
     return jd;
   }
 
-  // Thời điểm Sóc (New Moon) thứ k, đầy đủ các số hạng hiệu chỉnh thiên văn
-  // (chính xác hơn nhiều so với công thức 1 số hạng đơn giản)
+  function sinDeg(angle) {
+    return Math.sin(angle * Math.PI / 180);
+  }
+
+  // ΔT = TT - UT (giây). Các đa thức lịch sử của Espenak/Meeus giúp chuyển
+  // thời điểm Sóc từ Dynamical Time của công thức thiên văn sang Universal Time.
+  function deltaTSeconds(year) {
+    let t;
+    let u;
+
+    if (year < -500) {
+      u = (year - 1820) / 100;
+      return -20 + 32 * u * u;
+    }
+    if (year < 500) {
+      u = year / 100;
+      return 10583.6 - 1014.41 * u + 33.78311 * u ** 2 - 5.952053 * u ** 3
+        - 0.1798452 * u ** 4 + 0.022174192 * u ** 5 + 0.0090316521 * u ** 6;
+    }
+    if (year < 1600) {
+      u = (year - 1000) / 100;
+      return 1574.2 - 556.01 * u + 71.23472 * u ** 2 + 0.319781 * u ** 3
+        - 0.8503463 * u ** 4 - 0.005050998 * u ** 5 + 0.0083572073 * u ** 6;
+    }
+    if (year < 1700) {
+      t = year - 1600;
+      return 120 - 0.9808 * t - 0.01532 * t ** 2 + t ** 3 / 7129;
+    }
+    if (year < 1800) {
+      t = year - 1700;
+      return 8.83 + 0.1603 * t - 0.0059285 * t ** 2 + 0.00013336 * t ** 3 - t ** 4 / 1174000;
+    }
+    if (year < 1860) {
+      t = year - 1800;
+      return 13.72 - 0.332447 * t + 0.0068612 * t ** 2 + 0.0041116 * t ** 3
+        - 0.00037436 * t ** 4 + 0.0000121272 * t ** 5 - 0.0000001699 * t ** 6
+        + 0.000000000875 * t ** 7;
+    }
+    if (year < 1900) {
+      t = year - 1860;
+      return 7.62 + 0.5737 * t - 0.251754 * t ** 2 + 0.01680668 * t ** 3
+        - 0.0004473624 * t ** 4 + t ** 5 / 233174;
+    }
+    if (year < 1920) {
+      t = year - 1900;
+      return -2.79 + 1.494119 * t - 0.0598939 * t ** 2 + 0.0061966 * t ** 3 - 0.000197 * t ** 4;
+    }
+    if (year < 1941) {
+      t = year - 1920;
+      return 21.2 + 0.84493 * t - 0.0761 * t ** 2 + 0.0020936 * t ** 3;
+    }
+    if (year < 1961) {
+      t = year - 1950;
+      return 29.07 + 0.407 * t - t ** 2 / 233 + t ** 3 / 2547;
+    }
+    if (year < 1986) {
+      t = year - 1975;
+      return 45.45 + 1.067 * t - t ** 2 / 260 - t ** 3 / 718;
+    }
+    if (year < 2005) {
+      t = year - 2000;
+      return 63.86 + 0.3345 * t - 0.060374 * t ** 2 + 0.0017275 * t ** 3
+        + 0.000651814 * t ** 4 + 0.00002373599 * t ** 5;
+    }
+    if (year < 2050) {
+      t = year - 2000;
+      return 62.92 + 0.32217 * t + 0.005589 * t ** 2;
+    }
+    if (year < 2150) {
+      u = (year - 1820) / 100;
+      return -20 + 32 * u * u - 0.5628 * (2150 - year);
+    }
+
+    u = (year - 1820) / 100;
+    return -20 + 32 * u * u;
+  }
+
+  // Thời điểm Sóc thứ k theo Meeus, Astronomical Algorithms (ấn bản 2,
+  // chương 49). Kết quả trả về là Julian Date theo UT, không phải TT.
   function NewMoon(k) {
     const T = k / 1236.85;
     const T2 = T * T;
     const T3 = T2 * T;
-    const dr = Math.PI / 180;
-    let jd1 = 2415020.75933 + 29.53058868 * k + 0.0001178 * T2 - 0.000000155 * T3;
-    jd1 += 0.00033 * Math.sin((166.56 + 132.87 * T - 0.009173 * T2) * dr);
+    const T4 = T3 * T;
+    const E = 1 - 0.002516 * T - 0.0000074 * T2;
+    const M = 2.5534 + 29.10535670 * k - 0.0000014 * T2 - 0.00000011 * T3;
+    const Mpr = 201.5643 + 385.81693528 * k + 0.0107582 * T2 + 0.00001238 * T3 - 0.000000058 * T4;
+    const F = 160.7108 + 390.67050284 * k - 0.0016118 * T2 - 0.00000227 * T3 + 0.000000011 * T4;
+    const omega = 124.7746 - 1.56375580 * k + 0.0020672 * T2 + 0.00000215 * T3;
 
-    const M = 359.2242 + 29.10535608 * k - 0.0000333 * T2 - 0.00000347 * T3;
-    const Mpr = 306.0253 + 385.81691806 * k + 0.0107306 * T2 + 0.00001236 * T3;
-    const F = 21.2964 + 390.67050646 * k - 0.0016528 * T2 - 0.00000239 * T3;
+    let jde = NEW_MOON_EPOCH + SYNODIC_MONTH * k + 0.0001337 * T2 - 0.000000150 * T3 + 0.00000000073 * T4;
+    jde += -0.40720 * sinDeg(Mpr) + 0.17241 * E * sinDeg(M) + 0.01608 * sinDeg(2 * Mpr);
+    jde += 0.01039 * sinDeg(2 * F) + 0.00739 * E * sinDeg(Mpr - M) - 0.00514 * E * sinDeg(Mpr + M);
+    jde += 0.00208 * E * E * sinDeg(2 * M) - 0.00111 * sinDeg(Mpr - 2 * F) - 0.00057 * sinDeg(Mpr + 2 * F);
+    jde += 0.00056 * E * sinDeg(2 * Mpr + M) - 0.00042 * sinDeg(3 * Mpr) + 0.00042 * E * sinDeg(M + 2 * F);
+    jde += 0.00038 * E * sinDeg(M - 2 * F) - 0.00024 * E * sinDeg(2 * Mpr - M) - 0.00017 * sinDeg(omega);
+    jde += -0.00007 * sinDeg(Mpr + 2 * M) + 0.00004 * sinDeg(2 * Mpr - 2 * F) + 0.00004 * sinDeg(3 * M);
+    jde += 0.00003 * sinDeg(Mpr + M - 2 * F) + 0.00003 * sinDeg(2 * Mpr + 2 * F);
+    jde += -0.00003 * sinDeg(Mpr + M + 2 * F) + 0.00003 * sinDeg(Mpr - M + 2 * F);
+    jde += -0.00002 * sinDeg(Mpr - M - 2 * F) - 0.00002 * sinDeg(3 * Mpr + M) + 0.00002 * sinDeg(4 * Mpr);
 
-    let C1 = (0.1734 - 0.000393 * T) * Math.sin(M * dr) + 0.0021 * Math.sin(2 * dr * M);
-    C1 -= 0.4068 * Math.sin(Mpr * dr) + 0.0161 * Math.sin(dr * 2 * Mpr);
-    C1 -= 0.0004 * Math.sin(dr * 3 * Mpr);
-    C1 += 0.0104 * Math.sin(dr * 2 * F) - 0.0051 * Math.sin(dr * (M + Mpr));
-    C1 -= 0.0074 * Math.sin(dr * (M - Mpr)) + 0.0004 * Math.sin(dr * (2 * F + M));
-    C1 -= 0.0004 * Math.sin(dr * (2 * F - M)) - 0.0006 * Math.sin(dr * (2 * F + Mpr));
-    C1 += 0.0010 * Math.sin(dr * (2 * F - Mpr)) + 0.0005 * Math.sin(dr * (2 * Mpr + M));
+    const planetaryCorrections = [
+      [0.000325, 299.77 + 0.107408 * k - 0.009173 * T2],
+      [0.000165, 251.88 + 0.016321 * k],
+      [0.000164, 251.83 + 26.651886 * k],
+      [0.000126, 349.42 + 36.412478 * k],
+      [0.000110, 84.66 + 18.206239 * k],
+      [0.000062, 141.74 + 53.303771 * k],
+      [0.000060, 207.14 + 2.453732 * k],
+      [0.000056, 154.84 + 7.306860 * k],
+      [0.000047, 34.52 + 27.261239 * k],
+      [0.000042, 207.19 + 0.121824 * k],
+      [0.000040, 291.34 + 1.844379 * k],
+      [0.000037, 161.72 + 24.198154 * k],
+      [0.000035, 239.56 + 25.513099 * k],
+      [0.000023, 331.55 + 3.592518 * k]
+    ];
 
-    let deltat;
-    if (T < -11) {
-      deltat = 0.001 + 0.000839 * T + 0.0002261 * T2 - 0.00000845 * T3 - 0.000000081 * T * T3;
-    } else {
-      deltat = -0.000278 + 0.000265 * T + 0.000262 * T2;
+    for (const [coefficient, angle] of planetaryCorrections) {
+      jde += coefficient * sinDeg(angle);
     }
 
-    return jd1 + C1 - deltat;
+    const approximateYear = 2000 + k / 12.3685;
+    return jde - deltaTSeconds(approximateYear) / 86400;
   }
 
   // Kinh độ Mặt Trời tức thời (0-11, mỗi cung 30 độ), đầy đủ số hạng hiệu chỉnh
@@ -72,23 +168,43 @@
     return INT(NewMoon(k) + 0.5 + timeZone / 24);
   }
 
+  // Tìm đúng kỳ Sóc gần nhất không nằm sau ngày đang xét. Không dựa vào giả
+  // định sai số của công thức luôn nhỏ hơn một phía của mốc tháng giao hội.
+  function getNewMoonOnOrBefore(dayNumber, timeZone) {
+    let k = INT((dayNumber - NEW_MOON_EPOCH) / SYNODIC_MONTH);
+    let newMoonDay = getNewMoonDay(k, timeZone);
+
+    while (newMoonDay > dayNumber) {
+      k -= 1;
+      newMoonDay = getNewMoonDay(k, timeZone);
+    }
+
+    let nextNewMoonDay = getNewMoonDay(k + 1, timeZone);
+    while (nextNewMoonDay <= dayNumber) {
+      k += 1;
+      newMoonDay = nextNewMoonDay;
+      nextNewMoonDay = getNewMoonDay(k + 1, timeZone);
+    }
+
+    return { k, dayNumber: newMoonDay };
+  }
+
   function getSunLongitude(dayNumber, timeZone) {
     return SunLongitude(dayNumber - 0.5 - timeZone / 24);
   }
 
   function getLunarMonth11(yy, timeZone) {
-    const off = jdFromDate(31, 12, yy) - 2415021;
-    const k = INT(off / 29.530588853);
-    let nm = getNewMoonDay(k, timeZone);
+    const lastNewMoon = getNewMoonOnOrBefore(jdFromDate(31, 12, yy), timeZone);
+    let nm = lastNewMoon.dayNumber;
     const sunLong = getSunLongitude(nm, timeZone);
     if (sunLong >= 9) {
-      nm = getNewMoonDay(k - 1, timeZone);
+      nm = getNewMoonDay(lastNewMoon.k - 1, timeZone);
     }
     return nm;
   }
 
   function getLeapMonthOffset(a11, timeZone) {
-    const k = INT(0.5 + (a11 - 2415021.076998695) / 29.530588853);
+    const k = getNewMoonOnOrBefore(a11, timeZone).k;
     let i = 1;
     let arc = getSunLongitude(getNewMoonDay(k + i, timeZone), timeZone);
     let last;
@@ -103,11 +219,7 @@
   // Chuyển Dương lịch sang Âm lịch - thuật toán đầy đủ, có xử lý tháng nhuận chính xác
   function convertSolar2Lunar(dd, mm, yy, timeZone) {
     const dayNumber = jdFromDate(dd, mm, yy);
-    const k = INT((dayNumber - 2415021.076998695) / 29.530588853);
-    let monthStart = getNewMoonDay(k + 1, timeZone);
-    if (monthStart > dayNumber) {
-      monthStart = getNewMoonDay(k, timeZone);
-    }
+    const monthStart = getNewMoonOnOrBefore(dayNumber, timeZone).dayNumber;
 
     let a11 = getLunarMonth11(yy, timeZone);
     let b11 = a11;
