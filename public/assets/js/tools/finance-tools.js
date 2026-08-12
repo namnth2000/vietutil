@@ -446,29 +446,57 @@
         return bank.bin === vietqrBank.value;
       });
 
-      output.innerHTML = [
-        "<div class=\"qr-result\">",
-        "<img data-vietqr-image src=\"" + imageUrl + "\" alt=\"Mã QR chuyển khoản VietQR\" width=\"260\" height=\"260\" />",
-        "<div class=\"qr-result__info\">",
-        "<p><strong>Ngân hàng:</strong> " + (bankName ? bankName.name : "") + "</p>",
-        "<p><strong>Số tài khoản:</strong> " + account + "</p>",
-        amountRaw > 0 ? "<p><strong>Số tiền:</strong> " + window.VUH.formatNumber(amountRaw) + " VND</p>" : "",
-        "<label for=\"vietqrLink\">Liên kết ảnh QR</label>",
-        "<textarea id=\"vietqrLink\" rows=\"3\" readonly></textarea>",
-        "</div>",
-        "</div>",
-        "<p class=\"notice\">Mã QR được tạo bởi VietQR.io (img.vietqr.io). Vui lòng kiểm tra kỹ tên người nhận trên app ngân hàng trước khi chuyển tiền.</p>"
-      ].join("");
+      const result = document.createElement("div");
+      result.className = "qr-result";
 
-      const linkArea = output.querySelector("#vietqrLink");
-      if (linkArea) linkArea.value = imageUrl;
+      const image = document.createElement("img");
+      image.dataset.vietqrImage = "";
+      image.src = imageUrl;
+      image.alt = "Mã QR chuyển khoản VietQR";
+      image.width = 260;
+      image.height = 260;
 
-      const image = output.querySelector("[data-vietqr-image]");
-      if (image) {
-        image.addEventListener("error", function () {
-          output.innerHTML = "<p><strong>Không thể tải mã QR từ VietQR.io. Vui lòng kiểm tra kết nối mạng hoặc thử lại sau.</strong></p>";
-        });
+      const info = document.createElement("div");
+      info.className = "qr-result__info";
+
+      function appendInfoRow(labelText, valueText) {
+        const row = document.createElement("p");
+        const label = document.createElement("strong");
+        const value = document.createElement("span");
+        label.textContent = labelText;
+        value.textContent = " " + valueText;
+        row.append(label, value);
+        info.appendChild(row);
       }
+
+      appendInfoRow("Ngân hàng:", bankName ? bankName.name : "");
+      appendInfoRow("Số tài khoản:", account);
+      if (amountRaw > 0) {
+        appendInfoRow("Số tiền:", window.VUH.formatNumber(amountRaw) + " VND");
+      }
+
+      const linkLabel = document.createElement("label");
+      linkLabel.htmlFor = "vietqrLink";
+      linkLabel.textContent = "Liên kết ảnh QR";
+
+      const linkArea = document.createElement("textarea");
+      linkArea.id = "vietqrLink";
+      linkArea.rows = 3;
+      linkArea.readOnly = true;
+      linkArea.value = imageUrl;
+
+      info.append(linkLabel, linkArea);
+      result.append(image, info);
+
+      const notice = document.createElement("p");
+      notice.className = "notice";
+      notice.textContent = "Mã QR được tạo bởi VietQR.io (img.vietqr.io). Vui lòng kiểm tra kỹ tên người nhận trên app ngân hàng trước khi chuyển tiền.";
+
+      output.replaceChildren(result, notice);
+
+      image.addEventListener("error", function () {
+        output.innerHTML = "<p><strong>Không thể tải mã QR từ VietQR.io. Vui lòng kiểm tra kết nối mạng hoặc thử lại sau.</strong></p>";
+      });
     }
 
     form.addEventListener("submit", function (event) {

@@ -358,15 +358,24 @@
           picked.push(pool[idx]);
           pool.splice(idx, 1);
         }
-        output.innerHTML = [
-          "<div class=\"kpi\">",
-          picked
-            .map(function (item, index) {
-              return "<div class=\"tile\"><span>Kết quả " + (index + 1) + "</span><b>" + item + "</b></div>";
-            })
-            .join(""),
-          "</div>"
-        ].join("");
+        const resultList = document.createElement("div");
+        resultList.className = "kpi";
+
+        picked.forEach(function (item, index) {
+          const tile = document.createElement("div");
+          tile.className = "tile";
+
+          const label = document.createElement("span");
+          label.textContent = "Kết quả " + (index + 1);
+
+          const value = document.createElement("b");
+          value.textContent = item;
+
+          tile.append(label, value);
+          resultList.appendChild(tile);
+        });
+
+        output.replaceChildren(resultList);
       }
     }
 

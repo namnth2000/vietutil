@@ -217,19 +217,26 @@
       const today = new Date();
       const diff = window.VUH.daysBetween(today, eventDate);
 
-      let message;
+      const message = document.createElement("p");
+      const eventName = document.createElement("span");
+      eventName.textContent = "\"" + name + "\"";
       if (diff > 0) {
-        message = "Còn <strong>" + window.VUH.formatNumber(diff) + " ngày</strong> đến \"" + name + "\"";
+        message.append("Còn ");
+        const days = document.createElement("strong");
+        days.textContent = window.VUH.formatNumber(diff) + " ngày";
+        message.append(days, " đến ", eventName);
       } else if (diff === 0) {
-        message = "Hôm nay chính là ngày \"" + name + "\"!";
+        message.append("Hôm nay chính là ngày ", eventName, "!");
       } else {
-        message = "\"" + name + "\" đã qua <strong>" + window.VUH.formatNumber(Math.abs(diff)) + " ngày</strong>";
+        message.append(eventName, " đã qua ");
+        const days = document.createElement("strong");
+        days.textContent = window.VUH.formatNumber(Math.abs(diff)) + " ngày";
+        message.appendChild(days);
       }
 
-      output.innerHTML = [
-        "<p>" + message + "</p>",
-        "<p>Ngày diễn ra: " + vnWeekday(eventDate) + ", ngày " + formatDate(eventDate) + "</p>"
-      ].join("");
+      const eventDateSummary = document.createElement("p");
+      eventDateSummary.textContent = "Ngày diễn ra: " + vnWeekday(eventDate) + ", ngày " + formatDate(eventDate);
+      output.replaceChildren(message, eventDateSummary);
     }
 
     form.addEventListener("submit", function (event) {

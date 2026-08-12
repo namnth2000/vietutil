@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+- Prevented DOM-based self-XSS in random draw, VietQR account, and event countdown results by rendering untrusted input with `textContent`.
+
 ## [1.0.0] - 2026-07-24
 - Initial production-ready release.
 - Added multi-page static architecture with shared CSS and JS.
