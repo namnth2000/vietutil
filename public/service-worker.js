@@ -104,8 +104,11 @@ self.addEventListener("fetch", function (event) {
           }
           return response;
         })
-        .catch(function () {
-          return cachedResponse;
+        .catch(function (error) {
+          if (cachedResponse) {
+            return cachedResponse;
+          }
+          throw error;
         });
 
       return cachedResponse || networkResponse;
