@@ -22,7 +22,7 @@
   // Close mobile drawer when clicking on internal links
   const navMobileInput = document.getElementById("nav-mobile-toggle");
   const navMobileLinks = document.querySelectorAll(".nav-mobile-list a");
-  
+
   if (navMobileInput && navMobileLinks.length > 0) {
     navMobileLinks.forEach(function (link) {
       link.addEventListener("click", function () {
@@ -144,6 +144,14 @@
           }
         });
       }
+    });
+  }
+
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", function () {
+      navigator.serviceWorker.register("/service-worker.js").catch(function (error) {
+        console.warn("Service worker registration failed:", error);
+      });
     });
   }
 })();
